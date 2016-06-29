@@ -1,7 +1,7 @@
-#include "relay.h"
-
 #include <stdlib.h>
 #include <pigpio.h>
+
+#include "relay.h"
 
 /*	Initialise relay
 */
@@ -57,7 +57,7 @@ void card_initrelay(Card* card, unsigned int relay,
 	unsigned char gpio, unsigned char type, unsigned char val){
 
 	if(relay < card->relays_len){
-		relay_init(&card->relays[i], gpio, type, val);
+		relay_init(&card->relays[relay], gpio, type, val);
 	}
 }
 
@@ -68,5 +68,5 @@ void card_free(Card* card){
 
 void card_switch(Card* card, unsigned int relay){
 	if(relay < card->relays_len)
-		relay_switch(&card->relays[relay]);
+		relay_switch(card->relays[relay]);
 }

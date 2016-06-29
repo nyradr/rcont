@@ -10,6 +10,9 @@
 #define PORT_2	11
 #define PORT_3	13
 #define PORT_4	15
+#define PORT	{PORT_1, PORT_2, PORT_3, PORT_4}
+#define PORT_S	4
+
 
 /* Log into Rcont log file
  * The log file is defined by RCONT_LOG
@@ -17,10 +20,12 @@
 */
 void rcont_log(const char* mess);
 
+/*	Initialize rcont
+*/
 int rcont_init();
 
-int rcont_update();
-
+/*	Terminate Rcont
+*/
 void rcont_stop();
 
 #endif

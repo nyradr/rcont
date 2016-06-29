@@ -31,7 +31,8 @@ int rcont_init(){
 		
 	card = card_create(PORT_S);
 	for(unsigned int i = 0; i < PORT_S; i++)
-		card_initrelay(card, i, PORT[i], RCONT_RTYPE_CONT, 1);
+		card_initrelay(card, i,
+			PORT[i], RCONT_RTYPE_CONT, RCONT_RELAY_DOWN);
 }
 
 void rcont_stop(){

@@ -8,6 +8,9 @@
 
 #define RCONT_PUSHDELAY		200
 
+#define RCONT_RELAY_UP		1
+#define RCONT_RELAY_DOWN	0
+
 /*	Represent a relay
 */
 struct Relay{

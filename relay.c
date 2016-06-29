@@ -26,14 +26,18 @@ void relay_switch(Relay* relay){
 	switch(relay->type){
 		// continuous signal
 		case RCONT_RTYPE_CONT:
-			relay->value = (relay->value)? 0 : 1;
+			relay->value = (relay->value)?
+				RCONT_RELAY_DOWN : RCONT_RELAY_UP;
+			
 			gpioWrite(relay->gpio, relay->value);
 			break;
 		
 		// push signal and return to null
 		case RCONT_RTYPE_PUSH:
-			gpioTrigger(relay->gpio, RCONT_PUSHDELAY, 1);
-			break;		
+			gpioWrite(relay->gpio, RCONT_RELAY_UP);
+			sleep(RCONT_PUSHDELAY);
+			gpioWrite(relay->gpio, RCONT_RELAY_DOWN);
+			break;
 	}
 }
 

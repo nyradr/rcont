@@ -1,21 +1,26 @@
-/*	Relay controler
+/*	Rcont management
 */
 
 #include <stdio.h>
-#include <pigpio.h>
+#include <stdlib.h>
 
-#DEFINE PORT 4
+#include "rcont.h"
 
-int main(int argc, char**argv){
-	if(gpioInitialize() < 0){
-		return -1;
+void rcont_log(const char* mess){
+	FILE* file = fopen(RCONT_LOG, "a");
+	
+	if(file){
+		fprintf(file, "%s\n", mess);
+		fclose(file);
 	}
+}
+
+int rcont_init(){
 	
-	gpioSetMode(PORT, PI_OUTPUT);
 	
-	gpioWrite(PORT, 1);
 	
-	gpioTerminate();
-	
-	return 0;
+}
+
+void rcont_stop(){
+	rcont_log("Rcont daemon stop");
 }

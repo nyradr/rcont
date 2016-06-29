@@ -1,4 +1,5 @@
-/*	Relay controler deamon
+/*	start relay controler deamon
+ * 	Manage the deamon
 */
 
 #include <unistd.h>
@@ -6,18 +7,38 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <signal.h>
 
 #include "rcont.h"
 
-#define RCONT_DIR "/tmp/rcont"
-#define RCONT_LOG "rcont.log"
+/*	Produce when the deamon is stoped
+*/
+void onexit(){
+	rcont_stop();
+	
+	remove(RCONT_LOG);
+	rmdir(RCONT_DIR);
+}
+
+/*	When a process signal is handled
+*/
+void sighand(int sig){
+	switch(sig){
+		case SIGTERM:			
+			exit(0);
+			break;
+		
+		default:
+			break;
+	}
+}
 
 /*	Create Rcont daemon	
 */
 void daemonize(){
 	int fid = fork();
 	if(fid < 0){	// fork error
-		
+		printf("Rcont : fork fatal error\n");
 		exit(-1);
 	}else if(fid > 0){ // parent
 		exit(0);
@@ -25,23 +46,36 @@ void daemonize(){
 		setsid();
 		
 		// change working dir
-		if(stat(RCONT_DIR, NULL) < 0)
+		if(stat(RCONT_DIR, NULL) < 0){
 			mkdir(RCONT_DIR, 0777);
-		chdir(RCONT_DIR);
+			chdir(RCONT_DIR);
+		}
+		else{
+			printf("Rcont : change dir error");
+			exit(-1);
+		}
 		
 		// close standars IO
 		close( STDIN_FILENO );
 		close( STDOUT_FILENO );
 		close( STDERR_FILENO );
+		
+		signal(SIGTERM, sighand);
 	}
 }
+
 
 int main(int argc, char**argv){	
 	//as a daemon
 	daemonize();
 	
 	//daemon
-	while(1){}
+	rcont_log("Rcont daemon start");
+	rcont_init();
+	atexit(onexit);
+	while(1){
+		
+	}
 	
 	return 0;
 }

@@ -5,8 +5,8 @@
 
 /*	Initialise relay
 */
-void	relay_init(Relay* relay, unsigned char gpio,
-	unsigned char type, unsigned char val){
+void	relay_init(Relay* relay, char gpio,
+	char type, char val){
 	
 	if(relay){
 		relay->gpio = gpio;
@@ -59,7 +59,7 @@ Card* card_create(unsigned int nrelay){
 }
 
 void card_initrelay(Card* card, unsigned int relay,
-	unsigned char gpio, unsigned char type, unsigned char val){
+	char gpio, char type, char val){
 
 	if(relay < card->relays_len){
 		relay_init(&card->relays[relay], gpio, type, val);

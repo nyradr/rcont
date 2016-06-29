@@ -15,11 +15,11 @@
 */
 struct Relay{
 	// GPIO number
-	unsigned char	gpio;
+	char	gpio;
 	// GPIO type (see RCONT_TYPE_?
-	unsigned char	type;
+	char	type;
 	// actual GPIO value
-	unsigned char	value;
+	char	value;
 	// delay before next switch
 	unsigned long	delay;
 };
@@ -41,7 +41,7 @@ Card* card_create(unsigned int nrelay);
 /*	Initialise a relay
 */
 void card_initrelay(Card* card, unsigned int relay,
-	unsigned char gpio, unsigned char type, unsigned char val);
+	char gpio, char type, char val);
 
 /*	Free card and relays
 */

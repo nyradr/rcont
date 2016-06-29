@@ -49,16 +49,16 @@ void cardFromFile(Card* card, FILE* file){
 		if(c == '\n' || c == '\t' || c == ' '){ // end of line or value
 			switch(state){
 				case 0:	// gpio value
-					gpio = itoa(buff);
+					gpio = atoi(buff);
 					break;
 				case 1: // type value
-					type = itoa(buff);
+					type = atoi(buff);
 					if(	type != RCONT_RTYPE_PUSH &&
 						type != RCONT_RTYPE_PUSH )
 						type = RCONT_RTYPE_CONT;
 					break;
 				case 2: // init GPIO state
-					val = itoa(buff);
+					val = atoi(buff);
 					if( val != RCONT_RELAY_DOWN &&
 						val != RCONT_RELAY_UP )
 						val = RCONT_RELAY_DOWN;
@@ -101,7 +101,7 @@ void rcont_log(const char* mess){
 }
 
 void tfunct(){
-	for(unsigned int i = 0; i < card->relays_len, i++)
+	for(unsigned int i = 0; i < card->relays_len; i++)
 		card_switch(card, i);
 }
 
@@ -118,8 +118,10 @@ int rcont_init(){
 	if(file){
 		unsigned int nline = countline(file);
 		
-		card = card_create(countline);
+		card = card_create(nline);
 		cardFromFile(card, file);
+	
+		gpioSetTimerFunc(0, 1000, tfunct);
 	}else{
 		rcont_log("Rcont failed to load configuration file");
 		exit(-1);

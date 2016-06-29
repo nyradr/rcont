@@ -29,7 +29,7 @@ int rcont_init(){
 		rcont_log("Rcont GPIO init success");
 		
 	card = card_create(PORT_S);
-	for(unsigned int i = 0; i < PORT_S, i++)
+	for(unsigned int i = 0; i < PORT_S; i++)
 		card_initrelay(card, i, PORT[i], RCONT_RTYPE_CONT, 1);
 }
 

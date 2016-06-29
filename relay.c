@@ -33,7 +33,8 @@ void relay_switch(Relay* relay){
 		// push signal and return to null
 		case RCONT_RTYPE_PUSH:
 			gpioTrigger(relay->gpio, RCONT_PUSHDELAY, 1);
-			break;
+			break;		
+	}
 }
 
 Card* card_create(unsigned int nrelay){

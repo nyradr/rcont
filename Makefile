@@ -1,2 +1,2 @@
-rcont: rcont.c
-	gcc -o rcont rcont.c  -lpigpio -lrt -pthread
+rcont: main.c
+	gcc -o rcont main.c -lpigpio -lrt -pthread

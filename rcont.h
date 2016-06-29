@@ -12,7 +12,7 @@
 #define PORT_4	15
 
 #define PORT_S	4
-const unsigned char PORT = {PORT_1, PORT_2, PORT_3, PORT_4};
+const unsigned char [] PORT = {PORT_1, PORT_2, PORT_3, PORT_4};
 
 /* Log into Rcont log file
  * The log file is defined by RCONT_LOG

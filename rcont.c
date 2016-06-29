@@ -21,6 +21,7 @@ void rcont_log(const char* mess){
 Card* card;
 
 int rcont_init(){
+	const unsigned char PORT [PORT_S] = {PORT_1, PORT_2, PORT_3, PORT_4};
 	
 	if(gpioInitialise() < 0){
 		rcont_log("Rcont GPIO init error");

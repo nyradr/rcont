@@ -100,6 +100,11 @@ void rcont_log(const char* mess){
 	}
 }
 
+void tfunct(){
+	for(unsigned int i = 0; i < card->relays_len, i++)
+		card_switch(card, i);
+}
+
 int rcont_init(){
 	const unsigned char PORT [PORT_S] = {PORT_1, PORT_2, PORT_3, PORT_4};
 	
@@ -122,6 +127,8 @@ int rcont_init(){
 }
 
 void rcont_stop(){
+	card_free(card);
+	
 	gpioTerminate();
 	rcont_log("Rcont daemon stop");
 }

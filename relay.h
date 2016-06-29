@@ -25,7 +25,7 @@ typedef struct Relay Relay;
 /*	Represent the relay card
 */
 struct Card{
-	Relay**	relays;
+	Relay*	relays;
 	unsigned int relays_len;
 };
 typedef struct Card Card;

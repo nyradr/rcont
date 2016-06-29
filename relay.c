@@ -67,6 +67,7 @@ void card_free(Card* card){
 }
 
 void card_switch(Card* card, unsigned int relay){
-	if(relay < card->relays_len)
-		relay_switch(card->relays[relay]);
+	if(relay < card->relays_len){
+		relay_switch(&card->relays[relay]);
+	}
 }

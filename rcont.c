@@ -150,7 +150,7 @@ void update(){
 		
 		fclose(file);
 		// delete file content
-		fclose(fopen("file.txt", "w"));
+		truncate(RCONT_FILE, 0);
 	}else{
 		rcont_log("Cannot open file");
 	}

@@ -16,6 +16,7 @@
 void onexit(){
 	rcont_stop();
 	
+	remove(RCONT_FILE);
 	remove(RCONT_LOG);
 	rmdir(RCONT_DIR);
 }

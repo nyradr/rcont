@@ -12,6 +12,15 @@
 
 Card* card;
 
+void rcont_log(const char* mess){
+	FILE* file = fopen(RCONT_LOG, "a");
+	
+	if(file){
+		fprintf(file, "%s\n", mess);
+		fclose(file);
+	}
+}
+
 /*	Count the lines of a file
 */
 unsigned int countline(FILE* file){
@@ -74,6 +83,9 @@ void cardFromFile(Card* card, FILE* file){
 			if(state > 3 || c == '\n'){
 				if(gpio >= 0 && relay < card->relays_len){
 					card_initrelay(card, relay, gpio, type, val);
+					char log [126] = {0};
+					sprintf(&log, "Initialise relay with : %d gpio as %d type on %d val", gpio, type, val);
+					rcont_log(&log);
 				}
 				// reset
 				gpio = -1;
@@ -89,15 +101,6 @@ void cardFromFile(Card* card, FILE* file){
 				ibuff++;
 			}
 		}
-	}
-}
-
-void rcont_log(const char* mess){
-	FILE* file = fopen(RCONT_LOG, "a");
-	
-	if(file){
-		fprintf(file, "%s\n", mess);
-		fclose(file);
 	}
 }
 
@@ -120,6 +123,10 @@ int rcont_init(){
 		unsigned int nline = countline(file);
 		
 		card = card_create(nline);
+		char log[126] = {0};
+		sprintf(&log, "Initialise card with %d relays", nline);
+		rcont_log(log);
+		
 		cardFromFile(card, file);
 	
 		gpioSetTimerFunc(0, 1000, tfunct);

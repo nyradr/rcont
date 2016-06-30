@@ -6,7 +6,8 @@
 #define RCONT_RTYPE_CONT	1
 #define RCONT_RTYPE_PUSH	2
 
-#define RCONT_PUSHDELAY		200
+// delay in s
+#define RCONT_PUSHDELAY		1
 
 #define RCONT_RELAY_UP		1
 #define RCONT_RELAY_DOWN	0
@@ -52,12 +53,12 @@ void card_free(Card* card);
 */
 void card_switch(Card* card, unsigned int relay);
 
-/*	Set the time before next switch of a relay
+/*	Switch the relay and set the delay time before next switch
 */
 void card_setDelay(Card* card, unsigned int relay, long delay);
 
 /*	Update the delays of the card and make the switch
 */
-void card_update(Card* card, unsigned long delay);
+void card_update(Card* card, long delay);
 
 #endif

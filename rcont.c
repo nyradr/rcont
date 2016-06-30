@@ -39,8 +39,7 @@ unsigned int countline(FILE* file){
 void cardFromFile(Card* card, FILE* file){
 	// to file start
 	fseek(file, 0, SEEK_SET);
-	
-	#define BSIZE 3
+	const char BSIZE 3
 	
 	// relay values
 	char gpio = -1;
@@ -84,8 +83,8 @@ void cardFromFile(Card* card, FILE* file){
 				if(gpio >= 0 && relay < card->relays_len){
 					card_initrelay(card, relay, gpio, type, val);
 					char log [126] = {0};
-					sprintf(&log, "Initialise relay with : %d gpio as %d type on %d val", gpio, type, val);
-					rcont_log(&log);
+					sprintf(log, "Initialise relay with : %d gpio as %d type on %d val", gpio, type, val);
+					rcont_log(log);
 				}
 				// reset
 				gpio = -1;
@@ -108,9 +107,9 @@ void cardFromFile(Card* card, FILE* file){
 */
 void update(){
 	FILE* file = fopen(RCONT_FILE, "r");
-	#define BSIZE 8;
+	const char BSIZE 8;
 	
-	card_update(card, 
+	card_update(card, RCONT_DELAY);
 	
 	// test file
 	if(file){
@@ -169,12 +168,12 @@ int rcont_init(){
 		
 		card = card_create(nline);
 		char log[126] = {0};
-		sprintf(&log, "Initialise card with %d relays", nline);
+		sprintf(log, "Initialise card with %d relays", nline);
 		rcont_log(log);
 		
 		cardFromFile(card, file);
 	
-		gpioSetTimerFunc(0, 1000, tfunct);
+		gpioSetTimerFunc(0, RCONT_DELAY, update);
 		
 		fclose(file);
 	}else{

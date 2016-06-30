@@ -175,7 +175,7 @@ int rcont_init(){
 		
 		cardFromFile(card, file);
 	
-		gpioSetTimerFunc(0, RCONT_DELAY, update);
+		gpioSetTimerFunc(0, RCONT_DELAY * 1000, update);
 		
 		fclose(file);
 	}else{

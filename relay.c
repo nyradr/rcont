@@ -13,7 +13,7 @@ void	relay_init(Relay* relay, char gpio,
 		relay->gpio = gpio;
 		relay->type = type;
 		relay->value = val;
-		relay->delay = 0;
+		relay->delay = -1;
 		
 		gpioSetMode(relay->gpio, PI_OUTPUT);
 		gpioWrite(relay->gpio, val);
@@ -75,5 +75,25 @@ void card_free(Card* card){
 void card_switch(Card* card, unsigned int relay){
 	if(relay < card->relays_len){
 		relay_switch(&card->relays[relay]);
+	}
+}
+
+void card_setDelay(Card* card, unsigned int relay, long delay){
+	if(relay < card->relays_len)
+		card->relays[relay].delay = delay;
+}
+
+void card_update(Card* card, long delay){
+	for(unsigned int i = 0; i < card->relays_len; i++){
+		Relay* relay = &card->relays[i];
+		
+		if(relay->delay > 0){
+			relay->delay -= delay;
+			
+			if(relay->delay < 0){
+				relay->delay = -1;
+				relay_switch(relay);
+			}
+		}
 	}
 }

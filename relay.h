@@ -21,7 +21,7 @@ struct Relay{
 	// actual GPIO value
 	char	value;
 	// delay before next switch
-	unsigned long	delay;
+	long	delay;
 };
 typedef struct Relay Relay;
 
@@ -52,5 +52,12 @@ void card_free(Card* card);
 */
 void card_switch(Card* card, unsigned int relay);
 
+/*	Set the time before next switch of a relay
+*/
+void card_setDelay(Card* card, unsigned int relay, long delay);
+
+/*	Update the delays of the card and make the switch
+*/
+void card_update(Card* card, unsigned long delay);
 
 #endif

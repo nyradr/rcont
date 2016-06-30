@@ -81,7 +81,7 @@ void cardFromFile(Card* card, FILE* file){
 			
 			// end of line or end values
 			if(state > 3 || c == '\n'){
-				if(gpio >= 0 && relay < card->relays_len){
+				if(gpio > 0 && relay < card->relays_len){
 					card_initrelay(card, relay, gpio, type, val);
 					char log [126] = {0};
 					sprintf(log, "Initialise relay with : %d gpio as %d type on %d val", gpio, type, val);
@@ -132,6 +132,9 @@ void update(){
 				if(relay > 0 && relay <= card->relays_len){
 					relay--;
 					card_setDelay(card, relay, delay);
+					char log[126];
+					sprintf(log, "Switch relay %d for %d s", relay, delay);
+					rcont_log(log);
 				}
 				
 				memset(&buff, 0, BSIZE);

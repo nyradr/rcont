@@ -104,9 +104,54 @@ void cardFromFile(Card* card, FILE* file){
 	}
 }
 
-void tfunct(){
-	for(unsigned int i = 0; i < card->relays_len; i++)
-		card_switch(card, i);
+/*	Update relay status
+*/
+void update(){
+	FILE* file = fopen(RCONT_FILE, "r");
+	#define BSIZE 8;
+	
+	card_update(card, 
+	
+	// test file
+	if(file){
+		char buff [BSIZE] = {0};
+		char ibuff = 0;
+		char relay = -1;
+		char delay = -1;
+		
+		// read file
+		while(!feof(file)){
+			char c = fgetc(file);
+			if(c == ' '){
+				relay = atoi(buff);
+				memset(&buff, 0, BSIZE);
+				ibuff = 0;
+			
+			}else if (c == '\n'){
+				delay = atoi(buff);
+				
+				if(relay > 0 && relay <= card->relays_len){
+					relay--;
+					card_setDelay(card, relay, delay);
+				}
+				
+				memset(&buff, 0, BSIZE);
+				ibuff = 0;
+				relay = -1;
+				delay = -1;
+			
+			}else if (ibuff < BSIZE){
+				buff[ibuff] = c;
+				ibuff++;
+			}
+		}
+		
+		fclose(file);
+		// delete file content
+		fclose(fopen("file.txt", "w"));
+	}else{
+		rcont_log("Cannot open file");
+	}
 }
 
 int rcont_init(){
@@ -130,6 +175,8 @@ int rcont_init(){
 		cardFromFile(card, file);
 	
 		gpioSetTimerFunc(0, 1000, tfunct);
+		
+		fclose(file);
 	}else{
 		rcont_log("Rcont failed to load configuration file");
 		exit(-1);

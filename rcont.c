@@ -10,6 +10,8 @@
 #include "rcont.h"
 #include "relay.h"
 
+#define BSIZE 10
+
 Card* card;
 
 void rcont_log(const char* mess){
@@ -39,7 +41,6 @@ unsigned int countline(FILE* file){
 void cardFromFile(Card* card, FILE* file){
 	// to file start
 	fseek(file, 0, SEEK_SET);
-	const char BSIZE = 3;
 	
 	// relay values
 	char gpio = -1;
@@ -107,7 +108,6 @@ void cardFromFile(Card* card, FILE* file){
 */
 void update(){
 	FILE* file = fopen(RCONT_FILE, "r");
-	const char BSIZE = 8;
 	
 	card_update(card, RCONT_DELAY);
 	

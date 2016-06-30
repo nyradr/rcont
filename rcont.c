@@ -150,10 +150,8 @@ void update(){
 		}
 		
 		// delete file content
-		ftruncate(file, 0);
 		fclose(file);
-	}else{
-		rcont_log("Cannot open file");
+		remove(RCONT_FILE);
 	}
 }
 

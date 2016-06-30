@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <pigpio.h>
 
@@ -107,7 +108,7 @@ void cardFromFile(Card* card, FILE* file){
 /*	Update relay status
 */
 void update(){
-	FILE* file = fopen(RCONT_FILE, "r");
+	FILE* file = fopen(RCONT_FILE, "rw");
 	
 	card_update(card, RCONT_DELAY);
 	
@@ -148,9 +149,9 @@ void update(){
 			}
 		}
 		
-		fclose(file);
 		// delete file content
-		truncate(RCONT_FILE, 0);
+		ftruncate(file, 0);
+		fclose(file);
 	}else{
 		rcont_log("Cannot open file");
 	}

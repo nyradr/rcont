@@ -39,7 +39,7 @@ unsigned int countline(FILE* file){
 void cardFromFile(Card* card, FILE* file){
 	// to file start
 	fseek(file, 0, SEEK_SET);
-	const char BSIZE 3
+	const char BSIZE = 3;
 	
 	// relay values
 	char gpio = -1;
@@ -107,7 +107,7 @@ void cardFromFile(Card* card, FILE* file){
 */
 void update(){
 	FILE* file = fopen(RCONT_FILE, "r");
-	const char BSIZE 8;
+	const char BSIZE = 8;
 	
 	card_update(card, RCONT_DELAY);
 	
@@ -154,7 +154,6 @@ void update(){
 }
 
 int rcont_init(){
-	const unsigned char PORT [PORT_S] = {PORT_1, PORT_2, PORT_3, PORT_4};
 	
 	if(gpioInitialise() < 0){
 		rcont_log("Rcont GPIO init error");

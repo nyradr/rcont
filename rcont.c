@@ -111,7 +111,7 @@ void updateOut(){
 	
 	if(file){
 		for(unsigned int i = 0; i < card->relays_len; i++){
-			fprintf("%u %d %ds\n", i, card->relays.value, card->relays.delay);
+			fprintf("%u %d %ds\n", i, card->relays[i].value, card->relays[i].delay);
 		}
 		fclose(file);
 	}
@@ -165,7 +165,7 @@ void update(){
 		
 		// delete file content
 		fclose(file);
-		remove(RCONT_FILE);
+		remove(RCONT_FILEIN);
 	}
 }
 

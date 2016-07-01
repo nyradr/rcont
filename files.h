@@ -1,7 +1,7 @@
-/*	
+/*	Files constans and manipulation (log)
 */
 
-#ifnef FILES_INC
+#ifndef FILES_INC
 #define FILES_INC
 
 #define RCONT_DIR "/tmp/rcont"
@@ -15,9 +15,5 @@
  * mess	: message to log
 */
 void rcont_log(const char* mess);
-
-/* Write card state into RCONT_FILEOUT
-*/
-void writeCardState(Card* card);
 
 #endif

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pigpio.h>
+#include <stdio.h>
 
 #include "relay.h"
 #include "files.h"

@@ -111,7 +111,7 @@ void updateOut(){
 	
 	if(file){
 		for(unsigned int i = 0; i < card->relays_len; i++){
-			fprintf("%u %d %ds\n", i, card->relays[i].value, card->relays[i].delay);
+			fprintf(file, "%u %d %ds\n", i, card->relays[i].value, card->relays[i].delay);
 		}
 		fclose(file);
 	}

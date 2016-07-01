@@ -89,18 +89,24 @@ void card_setDelay(Card* card, unsigned int relay, long delay){
 }
 
 void card_update(Card* card, long delay){
+	char nswitch = 0;
+	
 	for(unsigned int i = 0; i < card->relays_len; i++){
 		Relay* relay = &card->relays[i];
 		
 		if(relay->delay > 0){
 			relay->delay -= delay;
 			
-			if(relay->delay < 0){
+			if(relay->delay <= 0){
 				relay->delay = -1;
 				relay_switch(relay);
+				nswitch++;
 			}
 		}
 	}
+	
+	if(nswitch > 0)
+		card_writeState(card);
 }
 
 void card_writeState(Card* card){

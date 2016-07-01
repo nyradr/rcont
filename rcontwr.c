@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 
-#define RCONT_FILE "/tmp/rcont/rcont.rcont"
+#define RCONT_FILE "/tmp/rcont/rcont.in"
 
 int main(int argc, char** argv){
 	if(argc == 3){
-		FILE* file = fopen(RCONT_FILE, "a");
+		FILE* file = fopen(RCONT_FILE, "w");
 		
 		if(file){
 			fprintf(file, "%s %s\n", argv[1], argv[2]);

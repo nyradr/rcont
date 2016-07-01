@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
 #include <pigpio.h>
 
 #include "rcont.h"
@@ -23,6 +22,8 @@ void rcont_log(const char* mess){
 		fclose(file);
 	}
 }
+
+
 
 /*	Count the lines of a file
 */
@@ -105,10 +106,21 @@ void cardFromFile(Card* card, FILE* file){
 	}
 }
 
+void updateOut(){
+	FILE* file = fopen(RCONT_FILEOUT, "w");
+	
+	if(file){
+		for(unsigned int i = 0; i < card->relays_len; i++){
+			fprintf("%u %d %ds\n", i, card->relays.value, card->relays.delay);
+		}
+		fclose(file);
+	}
+}
+
 /*	Update relay status
 */
 void update(){
-	FILE* file = fopen(RCONT_FILE, "rw");
+	FILE* file = fopen(RCONT_FILEIN, "r");
 	
 	card_update(card, RCONT_DELAY);
 	
@@ -149,6 +161,8 @@ void update(){
 			}
 		}
 		
+		updateOut();
+		
 		// delete file content
 		fclose(file);
 		remove(RCONT_FILE);
@@ -156,20 +170,22 @@ void update(){
 }
 
 int rcont_init(){
-	
+	// gpio init
 	if(gpioInitialise() < 0){
 		rcont_log("Rcont GPIO init error");
 		exit(-1);
 	}else
 		rcont_log("Rcont GPIO init success");
 	
+	// read config
 	FILE* file = fopen(RCONT_INFO, "r");
 	if(file){
 		unsigned int nline = countline(file);
 		
 		card = card_create(nline);
+		
 		char log[126] = {0};
-		sprintf(log, "Initialise card with %d relays", nline);
+		sprintf(log, "Initialise card with %u relays", nline);
 		rcont_log(log);
 		
 		cardFromFile(card, file);

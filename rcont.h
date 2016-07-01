@@ -4,10 +4,11 @@
 // daemon constants
 #define RCONT_DIR "/tmp/rcont"
 #define RCONT_LOG "rcont.log"
-#define RCONT_FILE "rcont.rcont"
+#define RCONT_FILEIN "rcont.in"
+#define RCONT_FILEOUT "rcont.out"
 #define RCONT_INFO "/etc/rcont/rcont.conf"
 
-// delay between scan
+// delay between scan (in s)
 #define RCONT_DELAY 1
 
 /* Log into Rcont log file

@@ -3,6 +3,7 @@
 #include <pigpio.h>
 
 #include "relay.h"
+#include "files.h"
 
 /*	Initialise relay
 */
@@ -75,13 +76,15 @@ void card_free(Card* card){
 void card_switch(Card* card, unsigned int relay){
 	if(relay < card->relays_len){
 		relay_switch(&card->relays[relay]);
+		writeCardState(card);
 	}
 }
 
 void card_setDelay(Card* card, unsigned int relay, long delay){
-	if(relay < card->relays_len)
+	if(relay < card->relays_len){
 		card->relays[relay].delay = delay;
-		relay_switch(&card->relays[relay]);
+		card_switch(card, relay);
+	}
 }
 
 void card_update(Card* card, long delay){

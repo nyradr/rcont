@@ -87,16 +87,18 @@ void cardFromFile(Card* card, FILE* file){
 			if(state > 3 || c == '\n'){
 				if(gpio > 0 && relay < card->relays_len){
 					card_initrelay(card, relay, gpio, type, val);
+					
 					char log [126] = {0};
 					sprintf(log, "Initialise relay %u with : %d gpio as %d type on %d val",
 						relay, gpio, type, val);
 					rcont_log(log);
+					
+					relay++;
 				}
 				// reset
 				gpio = -1;
 				type = RCONT_RTYPE_CONT;
 				val = RCONT_RELAY_DOWN;
-				relay++;
 				state = 0;
 			}
 		}else{
@@ -109,7 +111,7 @@ void cardFromFile(Card* card, FILE* file){
 	}
 }
 
-void updateOut(){
+void writeCardState(Card* card){
 	FILE* file = fopen(RCONT_FILEOUT, "w");
 	
 	if(file){

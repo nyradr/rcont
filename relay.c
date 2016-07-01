@@ -81,6 +81,7 @@ void card_switch(Card* card, unsigned int relay){
 void card_setDelay(Card* card, unsigned int relay, long delay){
 	if(relay < card->relays_len)
 		card->relays[relay].delay = delay;
+		relay_switch(&card->relays[relay]);
 }
 
 void card_update(Card* card, long delay){

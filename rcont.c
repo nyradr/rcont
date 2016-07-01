@@ -28,12 +28,14 @@ void rcont_log(const char* mess){
 /*	Count the lines of a file
 */
 unsigned int countline(FILE* file){
-	unsigned int lines;
+	unsigned int lines = 0;
 	
 	fseek(file, 0, SEEK_SET);
 	
-	while(EOF != (scanf("%*[^\n]"), scanf("%*c")))
-		lines++;
+	while(!feof(file)){
+		if(fgetc(file) == '\n')
+			lines++;
+	}
 		
 	return lines;
 }
@@ -86,7 +88,8 @@ void cardFromFile(Card* card, FILE* file){
 				if(gpio > 0 && relay < card->relays_len){
 					card_initrelay(card, relay, gpio, type, val);
 					char log [126] = {0};
-					sprintf(log, "Initialise relay with : %d gpio as %d type on %d val", gpio, type, val);
+					sprintf(log, "Initialise relay %u with : %d gpio as %d type on %d val",
+						relay, gpio, type, val);
 					rcont_log(log);
 				}
 				// reset

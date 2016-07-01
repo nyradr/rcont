@@ -111,17 +111,6 @@ void cardFromFile(Card* card, FILE* file){
 	}
 }
 
-void writeCardState(Card* card){
-	FILE* file = fopen(RCONT_FILEOUT, "w");
-	
-	if(file){
-		for(unsigned int i = 0; i < card->relays_len; i++){
-			fprintf(file, "%u %d %ds\n", i, card->relays[i].value, card->relays[i].delay);
-		}
-		fclose(file);
-	}
-}
-
 /*	Update relay status
 */
 void update(){
@@ -165,8 +154,6 @@ void update(){
 				ibuff++;
 			}
 		}
-		
-		updateOut();
 		
 		// delete file content
 		fclose(file);

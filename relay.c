@@ -76,7 +76,7 @@ void card_free(Card* card){
 void card_switch(Card* card, unsigned int relay){
 	if(relay < card->relays_len){
 		relay_switch(&card->relays[relay]);
-		writeCardState(card);
+		card_writeState(card);
 	}
 }
 
@@ -99,5 +99,16 @@ void card_update(Card* card, long delay){
 				relay_switch(relay);
 			}
 		}
+	}
+}
+
+void card_writeState(Card* card){
+	FILE* file = fopen(RCONT_FILEOUT, "w");
+	
+	if(file){
+		for(unsigned int i = 0; i < card->relays_len; i++){
+			fprintf(file, "%u %d %ds\n", i, card->relays[i].value, card->relays[i].delay);
+		}
+		fclose(file);
 	}
 }

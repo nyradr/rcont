@@ -61,4 +61,8 @@ void card_setDelay(Card* card, unsigned int relay, long delay);
 */
 void card_update(Card* card, long delay);
 
+/*	Write relay state into RCONT_FILEOUT
+*/
+void card_writeState(Card* card);
+
 #endif

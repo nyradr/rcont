@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-std=c11
 LIBS=-lpigpio -lrt -pthread
 
-all: clean rcont rcontwr
+all: rcont rcontwr
 
 clean:
 	rm rcont rcontwr
@@ -18,4 +18,4 @@ install:
 	sudo cp rcont.conf /etc/rcont/rcont.conf
 	sudo cp rcontd.sh /etc/init.d/rcontd.sh
 	sudo chmod 755 /etc/init.d/rcontd.sh
-	sudo update-rd.d rcontd.sh default
+	sudo update-rc.d rcontd.sh default

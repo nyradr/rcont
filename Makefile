@@ -14,18 +14,18 @@ rcont: main.c
 	$(CC) -o rcont relay.c rcont.c main.c $(LIBS) $(CFLAGS)
 
 install:
-	sudo mkdir -p /etc/rcont
-	sudo cp rcont.conf /etc/rcont/rcont.conf
-	sudo cp rcont /bin/rcont
+	mkdir -p /etc/rcont
+	cp rcont.conf /etc/rcont/rcont.conf
+	cp rcont /bin/rcont
 	chmod 755 /bin/rcont
-	sudo cp rcontwr /bin/rcontwr	
+	cp rcontwr /bin/rcontwr	
 	chmod 755 /bin/rcontwr
-	#sudo cp rcontd.sh /etc/init.d/rcontd.sh
-	#sudo chmod 755 /etc/init.d/rcontd.sh
-	#sudo update-rc.d rcontd.sh default
+	#cp rcontd.sh /etc/init.d/rcontd.sh
+	#chmod 755 /etc/init.d/rcontd.sh
+	#update-rc.d rcontd.sh default
 
 uninstall:
-	sudo rm -r /etc/rcont
-	sudo rm /bin/rcont /bin/rcontwr
-	#sudo update-rc.d rcontd.sh remove
-	#sudo rm /etc/init.d/rcontd.sh
+	rm -r /etc/rcont
+	rm /bin/rcont /bin/rcontwr
+	#update-rc.d rcontd.sh remove
+	#rm /etc/init.d/rcontd.sh

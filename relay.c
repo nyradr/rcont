@@ -100,7 +100,7 @@ void relay_in(Relay* relay){
 		}
 		
 		fclose(fin);
-		remove(relay->in);
+		fclose(fopen(relay->in, "w"));
 	}
 }
 
@@ -109,10 +109,11 @@ void relay_in(Relay* relay){
 void relay_update(Relay* relay, unsigned int elapsed){
 	// elasped time management
 	if(relay->delay){
-		if(relay->delay <= elapsed)
-			relay_switch(relay, 0);
-		else
+		if(relay->delay > elapsed){
 			relay->delay -= elapsed;
+			relay->changed = 1;
+		}else
+			relay_switch(relay, 0);
 	}
 	
 	// new entry
@@ -146,6 +147,12 @@ void card_initrelay(Card* card, unsigned int relay,
 }
 
 void card_free(Card* card){
+	for(unsigned int i = 0; i < card->relays_len; i++){
+		Relay* relay = &card->relays[i];
+		remove(relay->in);
+		remove(relay->out);
+	}
+	
 	free(card->relays);
 	free(card);
 }

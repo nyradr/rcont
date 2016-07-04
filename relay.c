@@ -39,6 +39,8 @@ char gpio_init(int pin){
 		exit(-1);
 	}
 	
+	rcont_log("Gpio init success");
+	
 	return file != 0 && dir != 0;
 }
 

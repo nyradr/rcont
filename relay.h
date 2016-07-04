@@ -15,6 +15,7 @@
 /*	Represent a relay
 */
 struct Relay{
+	unsigned int name;
 	// GPIO number
 	char	gpio;
 	// GPIO type (see RCONT_TYPE_?
@@ -22,7 +23,14 @@ struct Relay{
 	// actual GPIO value
 	char	value;
 	// delay before next switch
-	long	delay;
+	unsigned int delay;
+	// command input file
+	char*	in;
+	// status output file
+	char*	out;
+	// relay state changed (1 if changed, 0 else)
+	char	changed;
+	
 };
 typedef struct Relay Relay;
 

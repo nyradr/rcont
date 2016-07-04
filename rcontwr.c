@@ -17,7 +17,7 @@ int main(int argc, char** argv){
 			
 			file = fopen(buff, "a");
 			if(file){
-				fprintf(file, "\n%d", argv[2]);
+				fprintf(file, "%d\n", argv[2]);
 				fclose(file);
 			}else
 				printf("Impossible to open the file : %s", buff);

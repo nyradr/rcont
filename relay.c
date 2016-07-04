@@ -58,7 +58,7 @@ char gpio_write(int pin, char val){
 	
 	FILE* file = fopen(buff, "w");
 	if(file){
-		fprintf(file, "%d", (int) char);
+		fprintf(file, "%d", (int) val);
 		fclose(file);
 	}
 	

@@ -9,6 +9,62 @@
 
 #define BSIZE 8
 
+#define GPIO_LEN 256
+#define GPIO_BASE "/sys/class/gpio/gpio"
+#define GPIO_FEXPORT "/sys/class/gpio/export"
+#define GPIO_FUEXPORT "/sys/class/gpio/unexport"
+
+/*	Open gpio port in output mode
+*/
+char gpio_init(int pin){
+	
+	FILE* file = fopen(GPIO_FEXPORT, "w");
+	if(file){
+		fprintf(file, "%d", pin);
+		fclose(file);
+	}
+	
+	char buff[GPIO_LEN] = {0};
+	snprintf(buff, GPIO_LEN, "%s%d/direction", GPIO_BASE, pin);
+	
+	FILE* dir = fopen(buff, "w");
+	if(dir){
+		fprintf(dir, "out");
+		fclose(dir);
+	}
+	
+	
+	return file != 0 && dir != 0;
+}
+
+/*	Close gpio port
+*/
+char gpio_close(int pin){
+	
+	FILE* file = fopen(GPIO_FUEXPORT, "w");
+	if(file){
+		fprintf(file, "%d", pin);
+		fclose(file);
+	}
+	
+	return file != 0;
+}
+
+/*	Write value in GPIO port
+*/
+char gpio_write(int pin, char val){
+	char buff[GPIO_LEN] = {0};
+	snprintf(buff, GPIO_LEN, "%s%d/value", pin);
+	
+	FILE* file = fopen(buff, "w");
+	if(file){
+		fprintf(file, "%d", (int) char);
+		fclose(file);
+	}
+	
+	return file != 0;
+}
+
 /*	Initialise relay
 */
 void	relay_init(Relay* relay, unsigned int name,

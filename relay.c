@@ -15,16 +15,14 @@ void	relay_init(Relay* relay, unsigned int name,
 	char gpio, char type, char val){
 	
 	if(relay){
-		relay->name = name;
-		relay->gpio = gpio;
 		relay->type = type;
 		relay->value = val;
 		relay->delay = 0;
 		relay->changed = 1;
 		
 		// init gpio
-		gpioSetMode(relay->gpio, PI_OUTPUT);
-		gpioWrite(relay->gpio, val);
+		gpioSetMode(gpio, PI_OUTPUT);
+		gpioWrite(gpio, val);
 		
 		// create files
 		
@@ -145,7 +143,7 @@ void card_initrelay(Card* card, unsigned int relay,
 	char gpio, char type, char val){
 
 	if(relay < card->relays_len){
-		relay_init(&card->relays[relay], relay, gpio, type, val);
+		relay_init(&card->relays[relay], relay +1, gpio, type, val);
 	}
 }
 

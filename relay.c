@@ -15,14 +15,15 @@ void	relay_init(Relay* relay, unsigned int name,
 	char gpio, char type, char val){
 	
 	if(relay){
+		relay->gpio = gpio;
 		relay->type = type;
 		relay->value = val;
 		relay->delay = 0;
 		relay->changed = 1;
 		
 		// init gpio
-		gpioSetMode(gpio, PI_OUTPUT);
-		gpioWrite(gpio, val);
+		gpioSetMode(relay->gpio, PI_OUTPUT);
+		gpioWrite(relay->gpio, val);
 		
 		// create files
 		

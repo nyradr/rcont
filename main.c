@@ -16,10 +16,8 @@
 void onexit(){
 	rcont_stop();
 	
-	remove(RCONT_FILEOUT);
-	remove(RCONT_FILEIN);
 	remove(RCONT_LOG);
-	rmdir(RCONT_DIR);
+	remove(RCONT_DIR);
 }
 
 /*	When a process signal is handled

@@ -67,7 +67,7 @@ void relay_switch(Relay* relay, unsigned int delay){
 	}
 	
 	relay->delay = delay;
-	changed = 1;
+	relay->changed = 1;
 }
 
 /*	Write current relay state inside out file
@@ -77,10 +77,10 @@ void relay_out(Relay* relay){
 	if(relay->changed){
 		FILE* fout = fopen(relay->out, "w");
 		
-		if(fin){
+		if(fout){
 			fprintf(fout, "%d %d", relay->value, relay->delay);
 			fclose(fout);
-			changed = 0;
+			relay->changed = 0;
 		}
 	}
 }
@@ -99,7 +99,7 @@ void relay_in(Relay* relay){
 			}
 		}
 		
-		fclose(relay->in);
+		fclose(fin);
 		remove(relay->in);
 	}
 }
@@ -154,6 +154,6 @@ void card_update(Card* card, unsigned int delay){
 	for(unsigned int i = 0; i < card->relays_len; i++){
 		Relay* relay = &card->relays[i];
 		
-		relay_update(relay);
+		relay_update(relay, delay);
 	}
 }

@@ -19,7 +19,8 @@ void	relay_init(Relay* relay, unsigned int name,
 		relay->gpio = gpio;
 		relay->type = type;
 		relay->value = val;
-		relay->delay = -1;
+		relay->delay = 0;
+		relay->changed = 1;
 		
 		// init gpio
 		gpioSetMode(relay->gpio, PI_OUTPUT);

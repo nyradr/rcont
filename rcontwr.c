@@ -2,21 +2,32 @@
 */ 
 
 #include <stdio.h>
+#include <string.h>
 
-#define RCONT_FILE "/tmp/rcont/rcont.in"
+#define DIR "/tmp/rcont/"
+#define BSIZE 255
 
 int main(int argc, char** argv){
-	if(argc == 3){
-		FILE* file = fopen(RCONT_FILE, "w");
+	char buff[BSIZE] = {0};
+	FILE* file;
+	
+	switch(argc){
+		case 3:
+			sprintf(buff, "%s%d.in", DIR, argv[1]);
+			
+			file = fopen(buff, "a");
+			if(file){
+				fprintf(file, "\n%d", argv[2]);
+				fclose(file);
+			}else
+				printf("Impossible to open the file : %s", buff);
 		
-		if(file){
-			fprintf(file, "%s %s\n", argv[1], argv[2]);
-			fclose(file);
-		}else
-			printf("Cannot open file %s", RCONT_FILE);
-	}else{
-		printf("Invalid arguments : must be \"rcontwr relay delay\"\n");
-		printf("\trelay from 1 - nrelays\n");
-		printf("\tdelay delay before reset or -1\n");
+			break;
+			
+		default:
+			printf("Invalid arguments : must be \"rcontwr relay delay\"\n");
+			printf("\trelay from 1 - nrelays\n");
+			printf("\tdelay delay before reset or 0\n");
+			break;
 	}
 }

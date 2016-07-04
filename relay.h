@@ -15,9 +15,6 @@
 /*	Represent a relay
 */
 struct Relay{
-	unsigned int name;
-	// GPIO number
-	char	gpio;
 	// GPIO type (see RCONT_TYPE_?
 	char	type;
 	// actual GPIO value

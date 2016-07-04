@@ -111,54 +111,10 @@ void cardFromFile(Card* card, FILE* file){
 	}
 }
 
-/*	Update relay status
+/*	Update card
 */
 void update(){
-	FILE* file = fopen(RCONT_FILEIN, "r");
-	
 	card_update(card, RCONT_DELAY);
-	
-	// test file
-	if(file){
-		char buff [BSIZE] = {0};
-		char ibuff = 0;
-		char relay = -1;
-		char delay = -1;
-		
-		// read file
-		while(!feof(file)){
-			char c = fgetc(file);
-			if(c == ' '){
-				relay = atoi(buff);
-				memset(&buff, 0, BSIZE);
-				ibuff = 0;
-			
-			}else if (c == '\n'){
-				delay = atoi(buff);
-				
-				if(relay > 0 && relay <= card->relays_len){
-					relay--;
-					card_setDelay(card, relay, delay);
-					char log[126];
-					sprintf(log, "Switch relay %d for %d s", relay, delay);
-					rcont_log(log);
-				}
-				
-				memset(&buff, 0, BSIZE);
-				ibuff = 0;
-				relay = -1;
-				delay = -1;
-			
-			}else if (ibuff < BSIZE){
-				buff[ibuff] = c;
-				ibuff++;
-			}
-		}
-		
-		// delete file content
-		fclose(file);
-		remove(RCONT_FILEIN);
-	}
 }
 
 int rcont_init(){

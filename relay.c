@@ -98,6 +98,9 @@ void relay_in(Relay* relay){
 				relay_switch(relay, d);
 			}
 		}
+		
+		fclose(relay->in);
+		remove(relay->in);
 	}
 }
 

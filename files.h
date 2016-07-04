@@ -6,8 +6,6 @@
 
 #define RCONT_DIR "/tmp/rcont"
 #define RCONT_LOG "rcont.log"
-#define RCONT_FILEIN "rcont.in"
-#define RCONT_FILEOUT "rcont.out"
 #define RCONT_INFO "/etc/rcont/rcont.conf"
 
 /* Log into Rcont log file

@@ -34,6 +34,7 @@ void	relay_init(Relay* relay, unsigned int name,
 			exit(-1);
 		}
 		sprintf(relay->in, "%d.in\0", name);
+		fclose(fopen(relay->in, "w"));
 		
 		// output file
 		relay->out = malloc(BSIZE * sizeof(char));
@@ -42,6 +43,7 @@ void	relay_init(Relay* relay, unsigned int name,
 			exit(-1);
 		}
 		sprintf(relay->out, "%d.out\0", name);
+		fclose(fopen(relay->out, "w"));
 	}
 }
 
@@ -99,8 +101,8 @@ void relay_in(Relay* relay){
 			}
 		}
 		
-		freopen(fin, relay->in, "w");
 		fclose(fin);
+		fclose(fopen(relay->in, "w"));
 	}
 }
 

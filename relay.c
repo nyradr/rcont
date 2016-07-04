@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <unistd.h>
-#include <pigpio.h>
+//#include <pigpio.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -78,8 +78,11 @@ void	relay_init(Relay* relay, unsigned int name,
 		relay->changed = 1;
 		
 		// init gpio
-		gpioSetMode(relay->gpio, PI_OUTPUT);
-		gpioWrite(relay->gpio, val);
+		//gpioSetMode(relay->gpio, PI_OUTPUT);
+		//gpioWrite(relay->gpio, val);
+		
+		gpio_init(relay->gpio);
+		gpio_write(relay->gpio, val);
 		
 		// create files
 		
@@ -113,14 +116,15 @@ void relay_switch(Relay* relay, unsigned int delay){
 			relay->value = (relay->value)?
 				RCONT_RELAY_DOWN : RCONT_RELAY_UP;
 			
-			gpioWrite(relay->gpio, relay->value);
+			gpio_write(relay->gpio, relay->value);
+			//gpioWrite(relay->gpio, relay->value);
 			break;
 		
 		// push signal and return to previous value
 		case RCONT_RTYPE_PUSH:
-			gpioWrite(relay->gpio, RCONT_RELAY_UP);
+			//gpioWrite(relay->gpio, RCONT_RELAY_UP);
 			sleep(RCONT_PUSHDELAY);
-			gpioWrite(relay->gpio, RCONT_RELAY_DOWN);
+			//gpioWrite(relay->gpio, RCONT_RELAY_DOWN);
 			break;
 	}
 	
@@ -209,6 +213,7 @@ void card_free(Card* card){
 		Relay* relay = &card->relays[i];
 		remove(relay->in);
 		remove(relay->out);
+		gpio_close(relay->gpio);
 	}
 	
 	free(card->relays);

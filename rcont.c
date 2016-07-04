@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <pigpio.h>
+//#include <pigpio.h>
 
 #include "rcont.h"
 #include "relay.h"
@@ -117,12 +117,12 @@ void rcont_update(){
 
 int rcont_init(){
 	// gpio init
-	if(gpioInitialise() < 0){
+	/*if(gpioInitialise() < 0){
 		rcont_log("Rcont GPIO init error");
 		exit(-1);
 	}else
 		rcont_log("Rcont GPIO init success");
-	
+	*/
 	// read config
 	FILE* file = fopen(RCONT_INFO, "r");
 	if(file){
@@ -146,6 +146,6 @@ int rcont_init(){
 void rcont_stop(){
 	card_free(card);
 	
-	gpioTerminate();
+	//gpioTerminate();
 	rcont_log("Rcont daemon stop");
 }

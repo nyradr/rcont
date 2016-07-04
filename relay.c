@@ -22,6 +22,9 @@ char gpio_init(int pin){
 	if(file){
 		fprintf(file, "%d", pin);
 		fclose(file);
+	}else{
+		rcont_log("Failed init gpio");
+		exit(-1);
 	}
 	
 	char buff[GPIO_LEN] = {0};
@@ -31,8 +34,10 @@ char gpio_init(int pin){
 	if(dir){
 		fprintf(dir, "out");
 		fclose(dir);
+	}else{
+		rcont_log("Failed init gpio direction");
+		exit(-1);
 	}
-	
 	
 	return file != 0 && dir != 0;
 }

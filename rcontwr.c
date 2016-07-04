@@ -13,7 +13,7 @@ int main(int argc, char** argv){
 	
 	switch(argc){
 		case 3:
-			sprintf(buff, "%s%d.in", DIR, argv[1]);
+			sprintf(buff, "%s%s.in", DIR, argv[1]);
 			
 			file = fopen(buff, "a");
 			if(file){

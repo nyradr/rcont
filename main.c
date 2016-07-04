@@ -60,6 +60,7 @@ void daemonize(){
 		close( STDOUT_FILENO );
 		close( STDERR_FILENO );
 		
+		// signal handler
 		signal(SIGTERM, sighand);
 	}
 }
@@ -73,8 +74,10 @@ int main(int argc, char**argv){
 	rcont_log("Rcont daemon start");
 	rcont_init();
 	atexit(onexit);
+	
 	while(1){
-		
+		rcont_update();
+		sleep(RCONT_DELAY);
 	}
 	
 	return 0;

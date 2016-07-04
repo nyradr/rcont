@@ -14,4 +14,8 @@ int rcont_init();
 */
 void rcont_stop();
 
+/*	Update rcont state
+*/
+void rcont_update();
+
 #endif

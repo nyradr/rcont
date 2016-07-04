@@ -111,9 +111,7 @@ void cardFromFile(Card* card, FILE* file){
 	}
 }
 
-/*	Update card
-*/
-void update(){
+void rcont_update(){
 	card_update(card, RCONT_DELAY);
 }
 
@@ -137,8 +135,6 @@ int rcont_init(){
 		rcont_log(log);
 		
 		cardFromFile(card, file);
-	
-		gpioSetTimerFunc(0, RCONT_DELAY * 1000, update);
 		
 		fclose(file);
 	}else{

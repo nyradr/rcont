@@ -99,8 +99,8 @@ void relay_in(Relay* relay){
 			}
 		}
 		
+		freopen(fin, relay->in, "w");
 		fclose(fin);
-		fclose(fopen(relay->in, "w"));
 	}
 }
 

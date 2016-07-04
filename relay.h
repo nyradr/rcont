@@ -56,21 +56,9 @@ void card_initrelay(Card* card, unsigned int relay,
 */
 void card_free(Card* card);
 
-/*	Switch relay output
- * 	If the relay is PUSH the value will return to null after PUSHDELAY ms
-*/
-void card_switch(Card* card, unsigned int relay);
-
-/*	Switch the relay and set the delay time before next switch
-*/
-void card_setDelay(Card* card, unsigned int relay, long delay);
-
 /*	Update the delays of the card and make the switch
 */
-void card_update(Card* card, long delay);
+void card_update(Card* card, unsigned int delay);
 
-/*	Write relay state into RCONT_FILEOUT
-*/
-void card_writeState(Card* card);
 
 #endif

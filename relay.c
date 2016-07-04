@@ -101,6 +101,22 @@ void relay_in(Relay* relay){
 	}
 }
 
+/*	Update the relay
+*/
+void relay_update(Relay* relay, unsigned int elapsed){
+	// elasped time management
+	if(relay->delay){
+		if(relay->delay <= elapsed)
+			relay_switch(relay, 0);
+		else
+			relay->delay -= elapsed;
+	}
+	
+	// new entry
+	relay_in(relay);
+	relay_out(relay);
+}
+
 Card* card_create(unsigned int nrelay){
 	Card* card = malloc(sizeof(Card));
 	
@@ -131,48 +147,10 @@ void card_free(Card* card){
 	free(card);
 }
 
-void card_switch(Card* card, unsigned int relay){
-	if(relay < card->relays_len){
-		relay_switch(&card->relays[relay]);
-		card_writeState(card);
-	}
-}
-
-void card_setDelay(Card* card, unsigned int relay, long delay){
-	if(relay < card->relays_len){
-		card->relays[relay].delay = delay;
-		card_switch(card, relay);
-	}
-}
-
-void card_update(Card* card, long delay){
-	char nswitch = 0;
-	
+void card_update(Card* card, unsigned int delay){
 	for(unsigned int i = 0; i < card->relays_len; i++){
 		Relay* relay = &card->relays[i];
 		
-		if(relay->delay > 0){
-			relay->delay -= delay;
-			
-			if(relay->delay <= 0){
-				relay->delay = -1;
-				relay_switch(relay);
-				nswitch++;
-			}
-		}
-	}
-	
-	if(nswitch > 0)
-		card_writeState(card);
-}
-
-void card_writeState(Card* card){
-	FILE* file = fopen(RCONT_FILEOUT, "w");
-	
-	if(file){
-		for(unsigned int i = 0; i < card->relays_len; i++){
-			fprintf(file, "%u %d %ds\n", i, card->relays[i].value, card->relays[i].delay);
-		}
-		fclose(file);
+		relay_update(relay);
 	}
 }

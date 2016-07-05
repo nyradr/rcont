@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "gpio.h"
+#include "files.h"
 
 #define GPIO_LEN 256
 #define GPIO_BASE "/sys/class/gpio/gpio"

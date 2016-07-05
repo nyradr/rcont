@@ -133,7 +133,9 @@ void relay_in(Relay* relay){
 					relay->last = sw;
 				}
 			}else{ // no valid data
-				rcont_log("No valid input data");
+				if(!feof(fin)){
+					rcont_log("No valid input data");
+				}
 			}
 		}
 		

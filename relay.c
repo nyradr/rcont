@@ -48,9 +48,18 @@ void	relay_init(Relay* relay, unsigned int name,
 	}
 }
 
+void relay_cleancmd(Relay* relay){
+	while(relay->next != NULL){
+		Switch* sw = relay->next;
+		relay->next = relay->next->next;
+		free(sw);
+	}
+}
+
 /*	Close relay gpio and delete IO files
 */
 void relay_close(Relay* relay){
+	relay_cleancmd(relay);
 	remove(relay->in);
 	remove(relay->out);
 	gpio_close(relay->gpio);
@@ -132,10 +141,12 @@ void relay_in(Relay* relay){
 					relay->last->next = sw;
 					relay->last = sw;
 				}
-			}else{ // no valid data
+			}else{ // no valid data, clean all commands
 				if(!feof(fin)){
 					fseek(fin, 0, SEEK_END);
-					rcont_log("No valid input data");
+					relay_cleancmd(relay);
+					if(relay->value == RCONT_RELAY_UP)
+						relay_switch(relay);
 				}
 			}
 		}

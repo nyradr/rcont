@@ -60,7 +60,7 @@ void relay_close(Relay* relay){
  * 	(0 -> 1; 1 -> 0)
  * 	Load next switch
 */
-void relay_switch(Relay* relay, unsigned int delay){
+void relay_switch(Relay* relay){
 	relay->value = (relay->value)?
 		RCONT_RELAY_DOWN : RCONT_RELAY_UP;
 	relay->changed = 1;
@@ -117,7 +117,7 @@ void relay_in(Relay* relay){
 			unsigned int d = 0;
 			if(fscanf(fin, "%u", &d) == 1){
 				// push switch to command list
-				Switch* sw = mallow(sizeof(Switch));
+				Switch* sw = malloc(sizeof(Switch));
 				if(!sw){
 					rcont_log("Malloc error");
 					exit(-1);

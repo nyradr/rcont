@@ -61,7 +61,7 @@ char gpio_close(int pin){
 */
 char gpio_write(int pin, char val){
 	char buff[GPIO_LEN] = {0};
-	snprintf(buff, GPIO_LEN, "%s%d/value", pin);
+	snprintf(buff, GPIO_LEN, "%s%d/value", GPIO_BASE, pin);
 	
 	FILE* file = fopen(buff, "w");
 	if(file){

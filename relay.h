@@ -28,7 +28,7 @@ struct Relay{
 	// actual GPIO value
 	char	value;
 	// nexts switchs
-	Switch*	nexts;
+	Switch*	next;
 	Switch* last;
 	
 	// command input file

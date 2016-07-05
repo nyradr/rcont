@@ -19,7 +19,7 @@ void	relay_init(Relay* relay, unsigned int name,
 		relay->gpio = gpio;
 		relay->type = type;
 		relay->value = val;
-		relay->delay = 0;
+		relay->next = NULL;
 		relay->changed = 1;
 		
 		// init gpio
@@ -125,8 +125,8 @@ void relay_in(Relay* relay){
 				sw->next = NULL;
 				sw->delay = d;
 				
-				if(relay->nexts == NULL){
-					relay->nexts = sw;
+				if(relay->next == NULL){
+					relay->next = sw;
 					relay->last = sw;
 				}else{
 					relay->last->next = sw;

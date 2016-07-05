@@ -12,6 +12,12 @@
 #define RCONT_RELAY_UP		1
 #define RCONT_RELAY_DOWN	0
 
+struct Switch{
+	struct Switch* next;	// newt switch
+	unsigned int delay;		// in delay (s)
+};
+typedef struct Switch Switch;
+
 /*	Represent a relay
 */
 struct Relay{
@@ -21,14 +27,17 @@ struct Relay{
 	char	type;
 	// actual GPIO value
 	char	value;
-	// delay before next switch
-	unsigned int delay;
+	// nexts switchs
+	Switch*	nexts;
+	Switch* last;
+	
 	// command input file
 	char*	in;
 	// status output file
 	char*	out;
 	// relay state changed (1 if changed, 0 else)
 	char	changed;
+	
 	
 };
 typedef struct Relay Relay;

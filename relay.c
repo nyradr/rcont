@@ -1,76 +1,14 @@
 #include <stdlib.h>
 #include <unistd.h>
-//#include <pigpio.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "relay.h"
 #include "files.h"
+#include "gpio.h"
 
 #define BSIZE 8
 
-#define GPIO_LEN 256
-#define GPIO_BASE "/sys/class/gpio/gpio"
-#define GPIO_FEXPORT "/sys/class/gpio/export"
-#define GPIO_FUEXPORT "/sys/class/gpio/unexport"
-
-/*	Open gpio port in output mode
-*/
-char gpio_init(int pin){
-	
-	FILE* file = fopen(GPIO_FEXPORT, "w");
-	if(file){
-		fprintf(file, "%d", pin);
-		fclose(file);
-	}else{
-		rcont_log("Failed init gpio");
-		exit(-1);
-	}
-	
-	char buff[GPIO_LEN] = {0};
-	snprintf(buff, GPIO_LEN, "%s%d/direction", GPIO_BASE, pin);
-	
-	FILE* dir = fopen(buff, "w");
-	if(dir){
-		fprintf(dir, "out");
-		fclose(dir);
-	}else{
-		rcont_log("Failed init gpio direction");
-		exit(-1);
-	}
-	
-	rcont_log("Gpio init success");
-	
-	return file != 0 && dir != 0;
-}
-
-/*	Close gpio port
-*/
-char gpio_close(int pin){
-	
-	FILE* file = fopen(GPIO_FUEXPORT, "w");
-	if(file){
-		fprintf(file, "%d", pin);
-		fclose(file);
-	}
-	
-	return file != 0;
-}
-
-/*	Write value in GPIO port
-*/
-char gpio_write(int pin, char val){
-	char buff[GPIO_LEN] = {0};
-	snprintf(buff, GPIO_LEN, "%s%d/value", GPIO_BASE, pin);
-	
-	FILE* file = fopen(buff, "w");
-	if(file){
-		fprintf(file, "%d", (int) val);
-		fclose(file);
-	}
-	
-	return file != 0;
-}
 
 /*	Initialise relay
 */
@@ -85,9 +23,6 @@ void	relay_init(Relay* relay, unsigned int name,
 		relay->changed = 1;
 		
 		// init gpio
-		//gpioSetMode(relay->gpio, PI_OUTPUT);
-		//gpioWrite(relay->gpio, val);
-		
 		gpio_init(relay->gpio);
 		gpio_write(relay->gpio, val);
 		
@@ -113,30 +48,43 @@ void	relay_init(Relay* relay, unsigned int name,
 	}
 }
 
+/*	Close relay gpio and delete IO files
+*/
+void relay_close(Relay* relay){
+	remove(relay->in);
+	remove(relay->out);
+	gpio_close(relay->gpio);
+}
+
 /*	Switch relay exit value
  * 	(0 -> 1; 1 -> 0)
+ * 	Load next switch
 */
 void relay_switch(Relay* relay, unsigned int delay){
+	relay->value = (relay->value)?
+		RCONT_RELAY_DOWN : RCONT_RELAY_UP;
+	relay->changed = 1;
+	
+	// load next next switch
+	if(relay->next != NULL){
+			Switch* sw = relay->next;
+			relay->next = relay->next->next;
+			free(sw);
+	}
+	
 	switch(relay->type){
 		// continuous signal
 		case RCONT_RTYPE_CONT:
-			relay->value = (relay->value)?
-				RCONT_RELAY_DOWN : RCONT_RELAY_UP;
-			
 			gpio_write(relay->gpio, relay->value);
-			//gpioWrite(relay->gpio, relay->value);
 			break;
 		
-		// push signal and return to previous value
+		// push signal
 		case RCONT_RTYPE_PUSH:
-			//gpioWrite(relay->gpio, RCONT_RELAY_UP);
+			gpio_write(relay->gpio, RCONT_RELAY_UP);
 			sleep(RCONT_PUSHDELAY);
-			//gpioWrite(relay->gpio, RCONT_RELAY_DOWN);
+			gpio_write(relay->gpio, RCONT_RELAY_DOWN);
 			break;
 	}
-	
-	relay->delay = delay;
-	relay->changed = 1;
 }
 
 /*	Write current relay state inside out file
@@ -146,8 +94,12 @@ void relay_out(Relay* relay){
 	if(relay->changed){
 		FILE* fout = fopen(relay->out, "w");
 		
+		unsigned int delay = 0;
+		if(relay->next != NULL)
+			delay = relay->next->delay;
+		
 		if(fout){
-			fprintf(fout, "%d %d", relay->value, relay->delay);
+			fprintf(fout, "%d %d", relay->value, delay);
 			fclose(fout);
 			relay->changed = 0;
 		}
@@ -163,8 +115,25 @@ void relay_in(Relay* relay){
 		// read all commands
 		while(!feof(fin)){
 			unsigned int d = 0;
-			if(fscanf(fin, "%d", &d) == 1){
-				relay_switch(relay, d);
+			if(fscanf(fin, "%u", &d) == 1){
+				// push switch to command list
+				Switch* sw = mallow(sizeof(Switch));
+				if(!sw){
+					rcont_log("Malloc error");
+					exit(-1);
+				}
+				sw->next = NULL;
+				sw->delay = d;
+				
+				if(relay->nexts == NULL){
+					relay->nexts = sw;
+					relay->last = sw;
+				}else{
+					relay->last->next = sw;
+					relay->last = sw;
+				}
+			}else{ // no valid data
+				rcont_log("No valid input data");
 			}
 		}
 		
@@ -177,12 +146,12 @@ void relay_in(Relay* relay){
 */
 void relay_update(Relay* relay, unsigned int elapsed){
 	// elasped time management
-	if(relay->delay){
-		if(relay->delay > elapsed){
-			relay->delay -= elapsed;
+	if(relay->next != NULL){
+		if(relay->next->delay > elapsed){
+			relay->next->delay -= elapsed;
 			relay->changed = 1;
 		}else
-			relay_switch(relay, 0);
+			relay_switch(relay);
 	}
 	
 	// new entry
@@ -218,9 +187,7 @@ void card_initrelay(Card* card, unsigned int relay,
 void card_free(Card* card){
 	for(unsigned int i = 0; i < card->relays_len; i++){
 		Relay* relay = &card->relays[i];
-		remove(relay->in);
-		remove(relay->out);
-		gpio_close(relay->gpio);
+		relay_close(relay);
 	}
 	
 	free(card->relays);

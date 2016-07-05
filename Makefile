@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-std=c11
-LIBS=-lpigpio -lrt -pthread
+LIBS=
 
 all: rcont rcontwr
 
@@ -11,7 +11,7 @@ rcontwr:
 	$(CC) -o rcontwr rcontwr.c
 
 rcont: main.c
-	$(CC) -o rcont relay.c rcont.c main.c $(LIBS) $(CFLAGS)
+	$(CC) -o rcont gpio.c relay.c rcont.c main.c $(LIBS) $(CFLAGS)
 
 install:
 	mkdir -p /etc/rcont

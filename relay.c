@@ -134,7 +134,7 @@ void relay_in(Relay* relay){
 				}
 			}else{ // no valid data
 				if(!feof(fin)){
-					fseek(fin, O, SEEK_END);
+					fseek(fin, 0, SEEK_END);
 					rcont_log("No valid input data");
 				}
 			}

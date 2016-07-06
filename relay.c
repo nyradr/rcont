@@ -111,7 +111,14 @@ void relay_out(Relay* relay){
 			delay = relay->next->delay;
 		
 		if(fout){
-			fprintf(fout, "%d %d", relay->value, delay);
+			Switch* sw = relay->next;
+			
+			while(sw != NULL){
+				fprintf(" %d", sw->delay);
+				sw = sw->next;
+			}
+			
+			fprintf(fout, "\n%d %d", relay->value, delay);
 			fclose(fout);
 			relay->changed = 0;
 		}

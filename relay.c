@@ -16,6 +16,7 @@ void	relay_init(Relay* relay, unsigned int name,
 	char gpio, char type, char val){
 	
 	if(relay){
+		relay->name = name;
 		relay->gpio = gpio;
 		relay->type = type;
 		relay->value = val;
@@ -31,7 +32,7 @@ void	relay_init(Relay* relay, unsigned int name,
 		// input file
 		relay->in = malloc(BSIZE * sizeof(char));
 		if(!relay->in){
-			rcont_log("Malloc error\n");
+			rcont_log("Malloc error");
 			exit(-1);
 		}
 		sprintf(relay->in, "%d.in\0", name);
@@ -40,7 +41,7 @@ void	relay_init(Relay* relay, unsigned int name,
 		// output file
 		relay->out = malloc(BSIZE * sizeof(char));
 		if(!relay->out){
-			rcont_log("Malloc error\n");
+			rcont_log("Malloc error");
 			exit(-1);
 		}
 		sprintf(relay->out, "%d.out\0", name);
@@ -94,6 +95,8 @@ void relay_switch(Relay* relay){
 			gpio_write(relay->gpio, RCONT_RELAY_DOWN);
 			break;
 	}
+	
+	rcont_log("Relay %u switched", relay->name);
 }
 
 /*	Write current relay state inside out file
@@ -141,6 +144,9 @@ void relay_in(Relay* relay){
 					relay->last->next = sw;
 					relay->last = sw;
 				}
+				
+				rcont_log("Relay %u reading new command", relay->name);
+				
 			}else{ // no valid data, clean all commands
 				if(!feof(fin)){
 					fseek(fin, 0, SEEK_END);
@@ -148,6 +154,8 @@ void relay_in(Relay* relay){
 					if(relay->value == RCONT_RELAY_UP)
 						relay_switch(relay);
 				}
+				
+				rcont_log("Relay %u commands cleanup", relay->name); 
 			}
 		}
 		

@@ -21,6 +21,8 @@ typedef struct Switch Switch;
 /*	Represent a relay
 */
 struct Relay{
+	// relay name
+	unsigned int name;
 	// GPIO port
 	char	gpio;
 	// GPIO type (see RCONT_TYPE_?

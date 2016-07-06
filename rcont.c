@@ -21,7 +21,7 @@ void rcont_log(const char* mess, ...){
 		va_list args;
 		va_start(args, mess);
 		
-		fprintf(file, mess, args);
+		vfprintf(file, mess, args);
 		fprintf(file, "\n");
 		
 		va_end(args);
@@ -94,7 +94,8 @@ void cardFromFile(Card* card, FILE* file){
 				if(gpio > 0 && relay < card->relays_len){
 					card_initrelay(card, relay, gpio, type, val);
 				
-					rcont_log("Initialise relay %u with : %d gpio as %d type on %d value", relay, gpio, type, val);
+					rcont_log("Initialise relay %u with : %d gpio as %d type on %d value",
+						relay, gpio, type, val);
 					
 					relay++;
 				}
@@ -119,13 +120,6 @@ void rcont_update(){
 }
 
 int rcont_init(){
-	// gpio init
-	/*if(gpioInitialise() < 0){
-		rcont_log("Rcont GPIO init error");
-		exit(-1);
-	}else
-		rcont_log("Rcont GPIO init success");
-	*/
 	// read config
 	FILE* file = fopen(RCONT_INFO, "r");
 	if(file){
@@ -134,14 +128,13 @@ int rcont_init(){
 		card = card_create(nline);
 		
 		char log[126] = {0};
-		sprintf(log, "Initialise card with %u relays", nline);
-		rcont_log(log);
+		rcont_log("Initialise card with %u relay", nline);
 		
 		cardFromFile(card, file);
 		
 		fclose(file);
 	}else{
-		rcont_log("Rcont failed to load configuration file");
+		rcont_log("Failed to load configuration file");
 		exit(-1);
 	}
 }
@@ -150,5 +143,5 @@ void rcont_stop(){
 	card_free(card);
 	
 	//gpioTerminate();
-	rcont_log("Rcont daemon stop");
+	rcont_log("Daemon stop");
 }

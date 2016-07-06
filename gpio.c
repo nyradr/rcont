@@ -16,7 +16,7 @@ char gpio_init(int pin){
 		fprintf(file, "%d", pin);
 		fclose(file);
 	}else{
-		rcont_log("Failed init gpio");
+		rcont_log("Failed init gpio %d", pin);
 		exit(-1);
 	}
 	
@@ -28,11 +28,12 @@ char gpio_init(int pin){
 		fprintf(dir, "out");
 		fclose(dir);
 	}else{
-		rcont_log("Failed init gpio direction");
+		rcont_log("Failed init gpio %d direction", pin);
+		gpio_close(pin);
 		exit(-1);
 	}
 	
-	rcont_log("Gpio init success");
+	rcont_log("Gpio %d init success", pin);
 	
 	return file != 0 && dir != 0;
 }

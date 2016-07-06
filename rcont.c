@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-//#include <pigpio.h>
+#include <stdarg.h>
 
 #include "rcont.h"
 #include "relay.h"
@@ -14,11 +14,17 @@
 
 Card* card;
 
-void rcont_log(const char* mess){
+void rcont_log(const char* mess, ...){
 	FILE* file = fopen(RCONT_LOG, "a");
 	
 	if(file){
-		fprintf(file, "%s\n", mess);
+		va_arg args;
+		va_start(args, mess);
+		
+		fprintf(file, mess, args);
+		fprintf(file, "\n");
+		
+		va_end(args);
 		fclose(file);
 	}
 }

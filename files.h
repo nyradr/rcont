@@ -12,6 +12,6 @@
  * The log file is defined by RCONT_LOG
  * mess	: message to log
 */
-void rcont_log(const char* mess);
+void rcont_log(const char* mess, ...);
 
 #endif

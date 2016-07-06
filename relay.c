@@ -153,9 +153,9 @@ void relay_in(Relay* relay){
 					relay_cleancmd(relay);
 					if(relay->value == RCONT_RELAY_UP)
 						relay_switch(relay);
+						
+					rcont_log("Relay %u commands cleanup", relay->name); 
 				}
-				
-				rcont_log("Relay %u commands cleanup", relay->name); 
 			}
 		}
 		

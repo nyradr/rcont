@@ -93,11 +93,8 @@ void cardFromFile(Card* card, FILE* file){
 			if(state > 3 || c == '\n'){
 				if(gpio > 0 && relay < card->relays_len){
 					card_initrelay(card, relay, gpio, type, val);
-					
-					char log [126] = {0};
-					sprintf(log, "Initialise relay %u with : %d gpio as %d type on %d val",
-						relay, gpio, type, val);
-					rcont_log(log);
+				
+					rcont_log("Initialise relay %u with : %d gpio as %d type on %d value", relay, gpio, type, val);
 					
 					relay++;
 				}

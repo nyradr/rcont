@@ -1,17 +1,23 @@
 CC=gcc
 CFLAGS=-std=c11
-LIBS=
+INC=-I./include
+SRC=./src
+OBJ=./obj
+BIN=./bin
 
 all: rcont rcontwr
 
+rcontwr: rcontwr.o
+	$(CC) -o $(BIN)/rcontwr $(INC) $(CFLAGS) $(OBJ)/rcontwr.o
+
+rcont: main.o gpio.o relay.o rcont.o
+	$(CC) -o $(BIN)/rcont $(INC) $(CFLAGS) $(OBJ)/gpio.o $(OBJ)/relay.o $(OBJ)/rcont.o $(OBJ)/main.o
+
+%.o : $(SRC)/%.c
+	$(CC) -o $(OBJ)/$@ -c $(CFLAGS) $(INC) $^
+
 clean:
-	rm rcont rcontwr
-
-rcontwr:
-	$(CC) -o rcontwr rcontwr.c
-
-rcont: main.c
-	$(CC) -o rcont gpio.c relay.c rcont.c main.c $(LIBS) $(CFLAGS)
+	rm -f $(OBJ)/* $(BIN)/*
 
 install:
 	mkdir -p /etc/rcont

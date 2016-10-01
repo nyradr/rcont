@@ -3,18 +3,22 @@
 
 #include "files.h"
 
-// delay between scan (in s)
+/* delay between scan (in s)
+ */
 #define RCONT_DELAY 1
 
-/*	Initialize rcont
+/* Initialize rcont
 */
 int rcont_init();
 
-/*	Terminate Rcont
+/* Terminate Rcont
 */
 void rcont_stop();
 
-/*	Update rcont state
+/* Update rcont state
+   Execute programmed commands
+   Read new commands
+   Write card state
 */
 void rcont_update();
 

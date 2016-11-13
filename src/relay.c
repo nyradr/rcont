@@ -2,6 +2,10 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 
 #include "relay.h"
 #include "files.h"
@@ -42,7 +46,10 @@ void	relay_init(Relay* relay, unsigned int name,
       exit(-1);
     }
     sprintf(relay->in, "%d.in\0", name);
-    fclose(fopen(relay->in, "w"));
+    if(mkfifo(relay->in, 0600) != 0){
+      rcont_log("Fifo creation error for relay%d", relay->name);
+      exit(-1);
+    }
 		
     // output file
     relay->out = malloc(BSIZE * sizeof(char));
@@ -143,13 +150,13 @@ void relay_out(Relay* relay){
 /* Read input file and execute command
  */
 void relay_in(Relay* relay){
-  FILE* fin = fopen(relay->in, "r");
+  int fd = open(relay->in, O_RDONLY);
 	
-  if(fin){
+  if(fd < 0){
     // read all commands
-    while(!feof(fin)){
-      unsigned int d = 0;
-      if(fscanf(fin, "%u", &d) == 1){
+    int d = 0;
+    while(read(fd, &d, sizeof(int)) == sizeof(int)){
+      if(d >= 0){
 	// push switch to command list
 	Switch* sw = malloc(sizeof(Switch));
 	if(!sw){
@@ -167,22 +174,17 @@ void relay_in(Relay* relay){
 	  relay->last = sw;
 	}
 				
-	rcont_log("Relay %u reading new command", relay->name);
-				
-      }else{ // no valid data, clean all commands
-	if(!feof(fin)){
-	  fseek(fin, 0, SEEK_END);
-	  relay_cleancmd(relay);
-	  if(relay->value == RCONT_RELAY_UP)
-	    relay_switch(relay);
+	rcont_log("Relay %u reading new command", relay->name);		
+      }else{
+	// no valid data, reset
+	relay_cleancmd(relay);
+	if(relay->value == RCONT_RELAY_UP)
+	  relay_switch(relay);
 						
-	  rcont_log("Relay %u commands cleanup", relay->name); 
-	}
+	rcont_log("Relay %u commands cleanup", relay->name); 
       }
     }
-		
-    fclose(fin);
-    fclose(fopen(relay->in, "w"));
+    close(fd);
   }
 }
 

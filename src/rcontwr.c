@@ -29,6 +29,8 @@ void write_relay(int relay, int delay){
 	printf("Success\n");
       else
 	printf("Error in delay write\n");
+
+      close(fd);
     }else
       printf("Error in relay file opening\n");
   }else

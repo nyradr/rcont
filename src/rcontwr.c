@@ -43,10 +43,14 @@ void write_relay(int relay, int delay){
     printf("Error in relay file initialization\n");
 }
 
+/* Entry point
+   arguments :
+      1 : relay name (decimal integer [1, nrelay])
+      2 : delay (decimal integer, in s), 0 for immediate switch
+          negative for reset : forget all command before the reset
+	  and reset the switch to initial state
+ */
 int main(int argc, char** argv){
-  char buff[BSIZE] = {0};
-  FILE* file;
-	
   if(argc == 3){
     int relay = strtol(argv[1], NULL, 10);
     int delay = strtol(argv[2], NULL, 10);
@@ -55,6 +59,6 @@ int main(int argc, char** argv){
     printf("Invalid arguments : must be \"rcontwr relay delay\"\n");
     printf("\trelay from 1 - nrelays\n");
     printf("\tdelay delay before switch, 0 for instant switch\n");
-    printf("\tnegative delay for reset or all commands\n");
+    printf("\tnegative delay for reset all commands\n");
   }
 }

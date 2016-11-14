@@ -14,23 +14,6 @@
 
 Card* card;
 
-void rcont_log(const char* mess, ...){
-  FILE* file = fopen(RCONT_LOG, "a");
-	
-  if(file){
-    va_list args;
-    va_start(args, mess);
-		
-    vfprintf(file, mess, args);
-    fprintf(file, "\n");
-		
-    va_end(args);
-    fclose(file);
-  }
-}
-
-
-
 /* Count the lines of a file
  */
 unsigned int countline(FILE* file){

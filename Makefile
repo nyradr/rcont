@@ -10,8 +10,8 @@ all: rcont rcontwr
 rcontwr: rcontwr.o
 	$(CC) -o $(BIN)/rcontwr $(INC) $(CFLAGS) $(OBJ)/rcontwr.o
 
-rcont: main.o gpio.o relay.o rcont.o
-	$(CC) -o $(BIN)/rcont $(INC) $(CFLAGS) $(OBJ)/gpio.o $(OBJ)/relay.o $(OBJ)/rcont.o $(OBJ)/main.o
+rcont: main.o files.o gpio.o relay.o rcont.o
+	$(CC) -o $(BIN)/rcont $(INC) $(CFLAGS) $(OBJ)/gpio.o $(OBJ)/relay.o $(OBJ)/rcont.o $(OBJ)/main.o $(OBJ)/files.o
 
 %.o : $(SRC)/%.c
 	$(CC) -o $(OBJ)/$@ -c $(CFLAGS) $(INC) $^

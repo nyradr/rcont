@@ -150,9 +150,9 @@ void relay_out(Relay* relay){
 /* Read input file and execute command
  */
 void relay_in(Relay* relay){
-  int fd = open(relay->in, O_RDONLY);
+  int fd = open(relay->in, O_RDONLY | O_NONBLOCK);
 	
-  if(fd < 0){
+  if(fd >= 0){
     // read all commands
     int d = 0;
     while(read(fd, &d, sizeof(int)) == sizeof(int)){
@@ -174,9 +174,9 @@ void relay_in(Relay* relay){
 	  relay->last = sw;
 	}
 				
-	rcont_log("Relay %u reading new command", relay->name);		
+	rcont_log("Relay %u reading new command", relay->name);	
       }else{
-	// no valid data, reset
+	// negative, reset
 	relay_cleancmd(relay);
 	if(relay->value == RCONT_RELAY_UP)
 	  relay_switch(relay);

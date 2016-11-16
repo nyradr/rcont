@@ -34,30 +34,38 @@ void	relay_init(Relay* relay, unsigned int name,
     relay->changed = 1;
 		
     // init gpio
-    gpio_init(relay->gpio);
-    gpio_write(relay->gpio, val);
-		
+    if(gpio_init(relay->gpio)){
+      if(!gpio_write(relay->gpio, val)){
+	rcont_log("Unable to write %d in GPIO %d", val, relay->gpio);
+	exit(RCONT_EXIT_GPIO);
+      }
+    }else{
+      rcont_log("Unable to set GPIO %d", relay->gpio);
+      exit(RCONT_EXIT_GPIO);
+    }
+    
     // create files
 		
     // input file
     relay->in = malloc(BSIZE * sizeof(char));
     if(!relay->in){
       rcont_log("Malloc error");
-      exit(-1);
+      exit(RCONT_EXIT_MALLOC);
     }
     sprintf(relay->in, "%d.in\0", name);
     if(mkfifo(relay->in, 0600) != 0){
       rcont_log("Fifo creation error for relay%d", relay->name);
-      exit(-1);
+      exit(RCONT_EXIT_FILE);
     }
 		
     // output file
     relay->out = malloc(BSIZE * sizeof(char));
     if(!relay->out){
       rcont_log("Malloc error");
-      exit(-1);
+      exit(RCONT_EXIT_MALLOC);
     }
-    sprintf(relay->out, "%d.out\0", name);
+    
+    snprintf(relay->out, BSIZE, "%d.out\0", name);
     fclose(fopen(relay->out, "w"));
   }
 }

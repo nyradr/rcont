@@ -25,7 +25,7 @@ void onexit(){
 void sighand(int sig){
   switch(sig){
   case SIGTERM:			
-    exit(0);
+    exit(RCONT_EXIT_NONE);
     break;
 		
   default:
@@ -39,9 +39,9 @@ void daemonize(){
   int fid = fork();
   if(fid < 0){	// fork error
     printf("Rcont : fork fatal error\n");
-    exit(-1);
+    exit(RCONT_EXIT_FORK);
   }else if(fid > 0){ // parent
-    exit(0);
+    exit(RCONT_EXIT_NONE);
   }else{ // fork
     setsid();
 		
@@ -52,7 +52,7 @@ void daemonize(){
     }
     else{
       printf("Rcont : change dir error");
-      exit(-1);
+      exit(RCONT_EXIT_FORK);
     }
 		
     // close standars IO
@@ -77,7 +77,7 @@ int main(int argc, char**argv){
 	
   while(1){
     rcont_update();
-    sleep(RCONT_DELAY);
+    usleep(RCONT_DELAY);
   }
 	
   return 0;

@@ -13,9 +13,9 @@
 */
 #define RCONT_RTYPE_PUSH	2
 
-/* Delay (in second) of the relay push inverstion
+/* Delay (in ms) of the relay push inverstion
  */
-#define RCONT_PUSHDELAY		1
+#define RCONT_PUSHDELAY		1000
 
 /* Value to write in the GPIO as UP value
  */

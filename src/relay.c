@@ -117,7 +117,7 @@ void relay_switch(Relay* relay){
     // push signal
   case RCONT_RTYPE_PUSH:
     gpio_write(relay->gpio, RCONT_RELAY_UP);
-    sleep(RCONT_PUSHDELAY);
+    usleep(RCONT_PUSHDELAY);
     gpio_write(relay->gpio, RCONT_RELAY_DOWN);
     break;
   }

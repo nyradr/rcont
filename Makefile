@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c11
+CFLAGS=-std=gnu99
 INC=-I./include
 SRC=./src
 OBJ=./obj

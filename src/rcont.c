@@ -117,7 +117,7 @@ int rcont_init(){
     fclose(file);
   }else{
     rcont_log("Failed to load configuration file");
-    exit(-1);
+    exit(RCONT_EXIT_FILE);
   }
 }
 

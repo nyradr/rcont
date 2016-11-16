@@ -3,9 +3,9 @@
 
 #include "files.h"
 
-/* delay between scan (in s)
+/* delay between scan (in ms)
  */
-#define RCONT_DELAY 1
+#define RCONT_DELAY 500
 
 /* Initialize rcont
 */

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "gpio.h"
-#include "files.h"
 
 #define GPIO_LEN 256
 #define GPIO_BASE "/sys/class/gpio/gpio"
@@ -17,13 +16,12 @@ char gpio_init(int pin){
     fclose(file);
 
     char buff[GPIO_LEN] = {0};
-    if(snprintf(buff, GPIO_LEN, "%s%d/direction", GPIO_BASE, pin) > 0{
+    if(snprintf(buff, GPIO_LEN, "%s%d/direction", GPIO_BASE, pin) > 0){
 	
 	FILE* fdir = fopen(buff, "w");
-	if(dir){
+	if(fdir){
 	  fprintf(fdir, "out");
 	  fclose(fdir);
-	  rcont_log("Gpio %d init success", pin);
 	  return 1;
 	}else
 	  gpio_close(pin);

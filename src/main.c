@@ -15,7 +15,7 @@
  */
 void onexit(){
   rcont_stop();
-	
+ 
   remove(RCONT_LOG);
   remove(RCONT_DIR);
 }
@@ -42,19 +42,28 @@ void daemonize(){
     exit(RCONT_EXIT_FORK);
   }else if(fid > 0){ // parent
     exit(RCONT_EXIT_NONE);
-  }else{ // fork
+  }else{
+    // forked process
     setsid();
-		
+
+    struct stat dbuff;
     // change working dir
-    if(stat(RCONT_DIR, NULL) < 0){
-      mkdir(RCONT_DIR, 0777);
-      chdir(RCONT_DIR);
-    }
-    else{
-      printf("Rcont : change dir error");
+    if(stat(RCONT_DIR, &dbuff) < 0){
+      printf("Creation of the rcont directory, %s\n", RCONT_DIR);
+      if(mkdir(RCONT_DIR, 0777) != 0){
+	printf("Unable to create rcont directory\n");
+	exit(RCONT_EXIT_FORK);
+      }
+    }else
+      printf("Rcont directory, %s, is already present\n", RCONT_DIR);
+    
+    if(chdir(RCONT_DIR) < 0){
+      printf("Unable to set into the rcont directory\n");
       exit(RCONT_EXIT_FORK);
     }
-		
+
+    printf("Rcont daemonized\n");
+    
     // close standars IO
     close( STDIN_FILENO );
     close( STDOUT_FILENO );
@@ -62,23 +71,23 @@ void daemonize(){
 		
     // signal handler
     signal(SIGTERM, sighand);
+
+    atexit(onexit);
+  
+    rcont_log("Rcont daemon start");
+    rcont_init();
+	
+    while(1){
+      rcont_update();
+      usleep(RCONT_DELAY);
+    }
   }
 }
 
 
-int main(int argc, char**argv){	
+int main(int argc, char**argv){
   //as a daemon
   daemonize();
-	
-  //daemon
-  rcont_log("Rcont daemon start");
-  rcont_init();
-  atexit(onexit);
-	
-  while(1){
-    rcont_update();
-    usleep(RCONT_DELAY);
-  }
 	
   return 0;
 }

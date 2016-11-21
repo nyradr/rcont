@@ -34,7 +34,7 @@ void	relay_init(Relay* relay, unsigned int name,
     relay->changed = 1;
 		
     // init gpio
-    if(gpio_init(relay->gpio)){
+    if(gpio_init(relay->gpio) == 1){
       if(!gpio_write(relay->gpio, val)){
 	rcont_log("Unable to write %d in GPIO %d", val, relay->gpio);
 	exit(RCONT_EXIT_GPIO);

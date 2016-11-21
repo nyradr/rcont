@@ -17,17 +17,17 @@ char gpio_init(int pin){
 
     char buff[GPIO_LEN] = {0};
     if(snprintf(buff, GPIO_LEN, "%s%d/direction", GPIO_BASE, pin) > 0){
-	
-	FILE* fdir = fopen(buff, "w");
-	if(fdir){
-	  fprintf(fdir, "out");
-	  fclose(fdir);
-	  return 1;
-	}else
-	  gpio_close(pin);
-      }
+      
+      FILE* fdir = fopen(buff, "w");
+      if(fdir){
+	fprintf(fdir, "out");
+	fclose(fdir);
+	return 1;
+      }else
+	gpio_close(pin);
+    }
   }
-
+  
   return 0;
 }
 
